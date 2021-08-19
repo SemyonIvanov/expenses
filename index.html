@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="style.css">
+    <title>Document</title>
+</head>
+<body>
+<header>
+    <h1>Учет моих расходов</h1>
+</header>
+<main>
+    <div class="add-new-el_container">
+        <div class="where-spent_container">
+            <label for="where-spent">Куда было потрачено:</label>
+            <input type="text" id="where-spent" placeholder="Куда было потрачено">
+        </div>
+
+        <div class="how-mach-spent_container">
+            <label for="how-much-spent">Сколько было потрачено:</label>
+            <input type="text" id="how-much-spent" placeholder="Сколько было потрачено">
+        </div>
+
+        <button type="submit" id="button-add-el">Добавить</button>
+    </div>
+
+    <section>
+        <span id="total">Итого: 7884 р.</span>
+        <ol id="main-list">
+            <li>
+                <span>Магазин пятерочка 01.02.2020</span>
+                <span>2020p</span>
+                    <button class="edit"></button>
+                    <button class="delete"></button>
+            </li>
+            <li>
+                <span>Магазин пятерочка 01.02.2020</span>
+                <span>2020p</span>
+                    <button class="edit"></button>
+                    <button class="delete"></button>
+            </li>
+            <li>
+                <span>Магазин пятерочка 01.02.2020</span>
+                <span>2020p</span>
+                    <button class="edit"></button>
+                    <button class="delete"></button>
+            </li>
+        </ol>
+    </section>
+</main>
+</body>
+</html>

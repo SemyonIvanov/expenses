@@ -1,0 +1,122 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: #252525;
+  color: white;
+  font-family: 'Roboto', sans-serif;
+  font-size: 20px;
+}
+
+header h1 {
+  text-align: center;
+  font-style: italic;
+  margin-top: 30px;
+}
+
+main {
+  width: 600px;
+  margin: 0 auto;
+}
+
+.add-new-el_container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 15px;
+  margin-top: 22px;
+}
+
+.where-spent_container {
+  width: calc(50% - 15px);
+}
+
+.how-mach-spent_container {
+  width: calc(35% - 15px);
+}
+
+.add-new-el_container label {
+  font-size: 14px;
+  opacity: 0.7;
+}
+
+.add-new-el_container input {
+  background: #545454;
+  border: 1px solid black;
+  border-radius: 5px;
+  height: 38px;
+  width: calc(100% - 5px);
+  padding-left: 5px;
+  font: inherit;
+}
+
+.add-new-el_container input:focus {
+  outline: none;
+  box-shadow: 0 0 2px 1px gray;
+}
+
+.add-new-el_container input::placeholder {
+  color: white;
+  opacity: 0.7;
+  font-size: 14px;
+}
+
+#button-add-el {
+  height: 38px;
+  font: inherit;
+  color: white;
+  font-size: 18px;
+  width: 15%;
+  cursor: pointer;
+  background: #545454;
+  border: none;
+  box-shadow: 3px 3px black;
+  border-radius: 5px;
+}
+
+#button-add-el:active {
+  box-shadow: 0 0;
+}
+
+section {
+  display: flex;
+  flex-direction: column;
+  margin-top: 30px;
+}
+
+#total {
+  text-align: right;
+}
+
+section ol {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+section ol li {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+li button {
+  border: none;
+  background-size: cover;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+}
+
+.edit {
+  background: url("./icon/pencil-outline.svg") center no-repeat;
+}
+
+.delete {
+  background: url("./icon/trash-can-outline.svg") center no-repeat;
+}
