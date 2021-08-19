@@ -17,6 +17,7 @@ window.onload = async function () {
 function render(collection) {
   mainList.innerHTML = '';
   collection.forEach((item, index) => {
+    console.log(item)
     const li = document.createElement('li');
     const whereSpentSpan = document.createElement('span');
     const howMuchSpentSpan = document.createElement('span');

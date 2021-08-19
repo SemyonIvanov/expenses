@@ -11,5 +11,5 @@ app.use(bodyParser.json());
 app.use("/", apiRoutes);
 
 app.listen(8000, () => {
-  console.log('Example app listening on port 8001!')
+  console.log('Example app listening on port 8000!')
 });

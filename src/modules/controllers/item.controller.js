@@ -1,31 +1,30 @@
-const uniqid = require('uniqid');
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const taskScheme = new Schema({
-  text: String,
-  isCheck: Boolean
+const expensesScheme = new Schema({
+  whereSpent: String,
+  howMuchSpent: Number
 });
 
-const Task = mongoose.model("tasks", taskScheme);
+const Item = mongoose.model("items", expensesScheme);
 
-const uri = "mongodb+srv://semyonivanov:semyonivanov@cluster0.6g7e8.mongodb.net/TODOlist?retryWrites=true&w=majority";
+const uri = "mongodb+srv://semyonivanov:semyonivanov@cluster0.6g7e8.mongodb.net/expenses?retryWrites=true&w=majority";
 mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true});
 
-module.exports.getAllTasks = async (req, res, next) => {
-  Task.find().then(result => {
+module.exports.getAllItems = async (req, res, next) => {
+  Item.find().then(result => {
     res.send(result);
   });
 };
 
-module.exports.createNewTask = async (req, res, next) => {
+module.exports.createNewItem = async (req, res, next) => {
   const body = req.body;
-  if (body.hasOwnProperty('text') && body.hasOwnProperty('isCheck')) {
-    await Task.create({
-      text: body.text,
-      isCheck: body.isCheck
+  if (body.hasOwnProperty('whereSpent') && body.hasOwnProperty('howMuchSpent')) {
+    await Item.create({
+      whereSpent: body.whereSpent,
+      howMuchSpent: body.howMuchSpent
     });
-    Task.find().then(result => {
+    Item.find().then(result => {
       res.send(result);
     });
   } else {
@@ -33,23 +32,22 @@ module.exports.createNewTask = async (req, res, next) => {
   }
 };
 
-module.exports.changeTaskInfo = async (req, res, next) => {
+module.exports.updateItem = async (req, res, next) => {
   const body = req.body;
-  if (body.hasOwnProperty('text') || body.hasOwnProperty('isCheck')) {
-    // await Task.updateOne({_id: body.id}, {text: body.text, isCheck: body.isCheck});
-    await Task.updateOne({_id: body.id}, {...body});
+  if (body.hasOwnProperty('whereSpent') || body.hasOwnProperty('howMuchSpent')) {
+    await Item.updateOne({_id: body._id}, {...body});
   } else {
     res.status(422).send('Error! Params not correct');
   }
-  Task.find().then(result => {
+  Item.find().then(result => {
     res.send(result);
   });
 };
 
-module.exports.deleteTask = (req, res, next) => {
+module.exports.deleteItem = (req, res, next) => {
   if (!req.query.id) return res.status(422).send('Error! Params not correct');
-  Task.deleteOne({_id: req.query.id}).then();
-  Task.find().then(result => {
+  Item.deleteOne({_id: req.query._id}).then();
+  Item.find().then(result => {
     res.send(result);
   });
 };
