@@ -36,7 +36,7 @@ main {
 }
 
 .how-mach-spent_container {
-  width: calc(35% - 15px);
+  width: calc(33% - 15px);
 }
 
 .add-new-el_container label {
@@ -52,6 +52,11 @@ main {
   width: calc(100% - 5px);
   padding-left: 5px;
   font: inherit;
+}
+
+.add-new-el_container input::-webkit-outer-spin-button,
+.add-new-el_container input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
 }
 
 .add-new-el_container input:focus {
@@ -70,7 +75,7 @@ main {
   font: inherit;
   color: white;
   font-size: 18px;
-  width: 15%;
+  width: 17%;
   cursor: pointer;
   background: #545454;
   border: none;
@@ -101,22 +106,66 @@ section ol {
 section ol li {
   display: flex;
   justify-content: space-between;
+  gap: 7px;
   margin-top: 10px;
+}
+
+li span:nth-child(1) {
+  width: calc(75% - 35px);
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+li span:nth-child(2) {
+  width: calc(25% - 35px);
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 li button {
   border: none;
-  background-size: cover;
   border-radius: 50%;
   width: 24px;
   height: 24px;
   cursor: pointer;
 }
 
+li input:nth-child(1) {
+  padding-left: 5px;
+  font: inherit;
+  font-size: 16px;
+  background: #545454;
+  border: 1px solid black;
+  height: 22px;
+  border-radius: 5px;
+  width: calc(75% - 42px);
+
+}
+
+li input:nth-child(2) {
+  padding-left: 5px;
+  font: inherit;
+  font-size: 16px;
+  background: #545454;
+  border: 1px solid black;
+  height: 22px;
+  border-radius: 5px;
+  width: calc(25% - 42px);
+}
+
+li input:focus {
+  outline: none;
+  box-shadow: 0 0 2px 1px gray;
+}
+
 .edit {
   background: url("./icon/pencil-outline.svg") center no-repeat;
+  background-size: cover;
 }
 
 .delete {
   background: url("./icon/trash-can-outline.svg") center no-repeat;
+  background-size: cover;
 }

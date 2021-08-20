@@ -5,30 +5,39 @@ const mainList = document.getElementById('main-list');
 const total = document.getElementById('total');
 let items;
 
-window.onload = async function () {
-  const resp = await fetch('http://localhost:8000/',
-      {
-        method: 'GET'
-      });
-  items = await resp.json();
-  render(items);
-}
-
-function render(collection) {
+const render = collection => {
   mainList.innerHTML = '';
   collection.forEach((item, index) => {
-    console.log(item)
     const li = document.createElement('li');
-    const whereSpentSpan = document.createElement('span');
-    const howMuchSpentSpan = document.createElement('span');
+    let whereSpentSpan;
+    if (item.isWhereEdit) {
+      whereSpentSpan = document.createElement('input');
+      whereSpentSpan.value = item.whereSpent;
+      whereSpentSpan.addEventListener("keyup", (e) => onChangeTarget(e, item));
+      whereSpentSpan.addEventListener("blur", (e) => editTarget(e, item));
+      window.setTimeout(() => whereSpentSpan.focus(), 0);
+    } else {
+      whereSpentSpan = document.createElement('span');
+      whereSpentSpan.innerHTML = item.whereSpent;
+      whereSpentSpan.addEventListener('dblclick', () => onDblClickWhere(item))
+    }
+    let howMuchSpentSpan;
+    if (item.isHowMuchEdit) {
+      howMuchSpentSpan = document.createElement('input');
+      howMuchSpentSpan.value = item.howMuchSpent;
+      howMuchSpentSpan.addEventListener("keyup", (e) => onChangeTarget(e, item));
+      howMuchSpentSpan.addEventListener("blur", (e) => editTarget(e, item));
+      window.setTimeout(() => howMuchSpentSpan.focus(), 0);
+    } else {
+      howMuchSpentSpan = document.createElement('span');
+      howMuchSpentSpan.innerHTML = `${item.howMuchSpent} p.`;
+      howMuchSpentSpan.addEventListener('dblclick', () => onDblClickHowMuch(item))
+    }
     const buttonEdit = document.createElement('button');
     const buttonDelete = document.createElement('button');
 
     buttonEdit.className = 'edit';
     buttonDelete.className = 'delete';
-
-    whereSpentSpan.innerHTML = item.whereSpent;
-    howMuchSpentSpan.innerHTML = item.howMuchSpent;
 
     mainList.appendChild(li);
     li.appendChild(whereSpentSpan);
@@ -36,65 +45,140 @@ function render(collection) {
     li.appendChild(buttonEdit);
     li.appendChild(buttonDelete);
 
-    buttonEdit.addEventListener('click', () => onBtnEditClick(index));
-    buttonDelete.addEventListener('click', () => onBtnDeleteClick(index));
+    buttonEdit.addEventListener('click', () => onBtnEditClick(item));
+    buttonDelete.addEventListener('click', () => onBtnDeleteClick(item));
   });
 }
 
-buttonAddEl.addEventListener('click', onBtnAddClick);
+const request = async (url, method, headers, body) => {
+  const resp = await fetch(url,
+      {
+        method: method,
+        headers: headers,
+        body: JSON.stringify(body)
+      });
+  items = await resp.json();
+  total.innerHTML = `Итого: ${items.total} p.`;
+  render(items.body);
+}
 
-async function onBtnAddClick() {
-  if (whereSpentInput.value && howMuchSpentInput.value) {
-    const resp = await fetch('http://localhost:8000/createNewItem',
+window.onload = async () => {
+  await request('http://localhost:8000/', 'GET');
+}
+
+const onBtnAddClick = async () => {
+  if (whereSpentInput.value && typeof +howMuchSpentInput.value === 'number') {
+    await request(
+        'http://localhost:8000/createNewItem',
+        'POST',
         {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json;charset=utf-8',
-            'Access-Control-Allow-Origin': '*'
-          },
-          body: JSON.stringify({
-            whereSpent: whereSpentInput.value,
-            howMuchSpent: howMuchSpentInput.value
-          })
-        });
-    items = await resp.json();
-    render(items);
+          'Content-Type': 'application/json;charset=utf-8',
+          'Access-Control-Allow-Origin': '*'
+        },
+        {
+          whereSpent: whereSpentInput.value,
+          howMuchSpent: howMuchSpentInput.value
+        })
     whereSpentInput.value = '';
     howMuchSpentInput.value = '';
   }
 }
 
-async function onBtnEditClick(index) {
-  whereSpentInput.value = items.whereSpent;
-  howMuchSpentInput.value = items.howMuchSpent;
-  const itemId = items[index]._id;
-  const resp = await fetch('http://localhost:8000/updateItem',
+let functionName = onBtnAddClick;
+
+const test = () => {
+  functionName();
+}
+
+buttonAddEl.addEventListener('click', () => test());
+
+const onBtnEditClick = item => {
+  whereSpentInput.value = item.whereSpent;
+  howMuchSpentInput.value = item.howMuchSpent;
+  buttonAddEl.innerHTML = 'Сохранить';
+  functionName = () => editItem(item);
+}
+
+const editItem = async item => {
+  const itemId = item._id;
+  await request(
+      'http://localhost:8000/updateItem',
+      'PATCH',
       {
-        method: 'PATCH',
-        headers: {
+        'Content-Type': 'application/json;charset=utf-8',
+        'Access-Control-Allow-Origin': '*'
+      },
+      {
+        _id: itemId,
+        whereSpent: whereSpentInput.value,
+        howMuchSpent: howMuchSpentInput.value
+      }
+  )
+  buttonAddEl.innerHTML = 'Добавить';
+  functionName = onBtnAddClick;
+  whereSpentInput.value = '';
+  howMuchSpentInput.value = '';
+}
+
+const onBtnDeleteClick = async item => {
+  const itemId = item._id;
+  await request(
+      `http://localhost:8000/deleteItem?id=${itemId}`,
+      'DELETE',
+      {
+        'Content-Type': 'application/json;charset=utf-8',
+        'Access-Control-Allow-Origin': '*'
+      }
+  )
+}
+
+function onDblClickWhere(item) {
+  item.isWhereEdit = true;
+  render(items.body)
+}
+
+function onDblClickHowMuch(item) {
+  item.isHowMuchEdit = true;
+  render(items.body)
+}
+
+async function onChangeTarget(e, item) {
+  e.preventDefault();
+  if (e.keyCode === 13) {
+    await editTarget(e, item);
+  }
+}
+
+async function editTarget(e, item) {
+  if (item.isWhereEdit) {
+    item.isWhereEdit = false;
+    const itemId = item._id;
+    await request(
+        'http://localhost:8000/updateItem',
+        'PATCH',
+        {
           'Content-Type': 'application/json;charset=utf-8',
           'Access-Control-Allow-Origin': '*'
         },
-        body: JSON.stringify({
-
-        })
-      });
-  items = await resp.json();
-  render(items);
-}
-
-async function onBtnDeleteClick(index) {
-  const itemId = items[index]._id;
-  console.log(itemId)
-  const resp = await fetch(`http://localhost:8000/deleteItem?id=${itemId}`,
-      {
-        method: 'DELETE',
-        headers: {
+        {
+          _id: itemId,
+          whereSpent: e.target.value
+        }
+    )
+  } else {
+    item.isHowMuchEdit = false;
+    const itemId = item._id;
+    await request(
+        'http://localhost:8000/updateItem',
+        'PATCH',
+        {
           'Content-Type': 'application/json;charset=utf-8',
           'Access-Control-Allow-Origin': '*'
         },
-      });
-  items = await resp.json();
-  render(items);
+        {
+          _id: itemId,
+          howMuchSpent: e.target.value
+        }
+    )
+  }
 }
-
