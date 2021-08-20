@@ -27,7 +27,6 @@ main {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  gap: 15px;
   margin-top: 22px;
 }
 
@@ -81,10 +80,12 @@ main {
   border: none;
   box-shadow: 3px 3px black;
   border-radius: 5px;
+  margin-bottom: 3px;
 }
 
 #button-add-el:active {
   box-shadow: 0 0;
+  margin-bottom: 0;
 }
 
 section {
@@ -106,7 +107,6 @@ section ol {
 section ol li {
   display: flex;
   justify-content: space-between;
-  gap: 7px;
   margin-top: 10px;
 }
 
@@ -153,6 +153,11 @@ li input:nth-child(2) {
   height: 22px;
   border-radius: 5px;
   width: calc(25% - 42px);
+}
+
+li input:nth-child(2)::-webkit-outer-spin-button,
+li input:nth-child(2)::-webkit-inner-spin-button {
+  -webkit-appearance: none;
 }
 
 li input:focus {
